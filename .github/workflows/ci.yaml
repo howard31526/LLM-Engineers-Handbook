@@ -59,10 +59,12 @@ jobs:
         with:
           poetry-version: 1.8.3
 
-      - name: Install packages
+      - name: Install packages (debug)
         run: |
-          poetry install --with dev --without api
-          poetry self add 'poethepoet[poetry_plugin]'
+          set -euxo pipefail
+          poetry --version
+          poetry install --with dev --without api -vvv || { poetry debug info || true; exit 1; }
+          poetry show --tree | sed -n '1,200p'
           
       - name: Login to ZenML Server
         env:
