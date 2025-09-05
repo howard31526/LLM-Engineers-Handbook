@@ -65,14 +65,11 @@ jobs:
           poetry self add 'poethepoet[poetry_plugin]'
 
       - name: Login to ZenML Server
-        if: ${{ github.event_name != 'pull_request' || github.event.pull_request.head.repo.fork == false }}
         env:
           ZENML_SERVER_URL:  ${{ secrets.ZENML_SERVER_URL }}
           ZENML_API_KEY:     ${{ secrets.ZENML_API_KEY }}
           ZENML_WORKSPACE:   ${{ secrets.ZENML_WORKSPACE }}
         run: |
-          set -euxo pipefail
-          poetry run zenml --version
           poetry run zenml login "${ZENML_SERVER_URL}" \
             --api-key "${ZENML_API_KEY}" \
             --workspace "${ZENML_WORKSPACE}"
