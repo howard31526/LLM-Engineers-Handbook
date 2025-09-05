@@ -64,18 +64,7 @@ jobs:
           poetry install
           poetry self add 'poethepoet[poetry_plugin]'
 
-      - name: Login to ZenML Server
-        env:
-          ZENML_SERVER_URL:  ${{ secrets.ZENML_SERVER_URL }}
-          ZENML_API_KEY:     ${{ secrets.ZENML_API_KEY }}
-          ZENML_WORKSPACE:   ${{ secrets.ZENML_WORKSPACE }}
-        run: |
-          poetry run zenml login "${ZENML_SERVER_URL}" \
-            --api-key "${ZENML_API_KEY}" \
-            --workspace "${ZENML_WORKSPACE}"
 
-          poetry run zenml service-account whoami || true
-          poetry run zenml workspace get || true
 
       - name: Run tests
         run: |
