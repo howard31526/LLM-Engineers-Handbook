@@ -64,11 +64,10 @@ jobs:
           poetry install
           poetry self add 'poethepoet[poetry_plugin]'
 
-      - name: Connect to ZenML Server
+      - name: Login to ZenML Server
         run: |
-          pip install zenml
-          zenml connect \
-            --url ${{ secrets.ZENML_SERVER_URL }} \
+          poetry run pip install -U "zenml"
+          poetry run zenml login ${{ secrets.ZENML_SERVER_URL }} \
             --api-key ${{ secrets.ZENML_API_KEY }} \
             --workspace ${{ secrets.ZENML_WORKSPACE }}
 
