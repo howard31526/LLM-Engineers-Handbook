@@ -15,10 +15,10 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup Python
-        uses: actions/setup-python@v3
+        uses: actions/setup-python@v5
         with:
           python-version: "3.11"
 
@@ -47,10 +47,10 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup Python
-        uses: actions/setup-python@v3
+        uses: actions/setup-python@v5
         with:
           python-version: "3.11"
 
@@ -65,11 +65,20 @@ jobs:
           poetry self add 'poethepoet[poetry_plugin]'
 
       - name: Login to ZenML Server
+        if: ${{ github.event_name != 'pull_request' || github.event.pull_request.head.repo.fork == false }}
+        env:
+          ZENML_SERVER_URL:  ${{ secrets.ZENML_SERVER_URL }}
+          ZENML_API_KEY:     ${{ secrets.ZENML_API_KEY }}
+          ZENML_WORKSPACE:   ${{ secrets.ZENML_WORKSPACE }}
         run: |
-          poetry run pip install -U "zenml"
-          poetry run zenml login ${{ secrets.ZENML_SERVER_URL }} \
-            --api-key ${{ secrets.ZENML_API_KEY }} \
-            --workspace ${{ secrets.ZENML_WORKSPACE }}
+          set -euxo pipefail
+          poetry run zenml --version
+          poetry run zenml login "${ZENML_SERVER_URL}" \
+            --api-key "${ZENML_API_KEY}" \
+            --workspace "${ZENML_WORKSPACE}"
+
+          poetry run zenml service-account whoami || true
+          poetry run zenml workspace get || true
 
       - name: Run tests
         run: |
