@@ -7570,7 +7570,7 @@ multidict = ">=4.0"
 
 [[package]]
 name = "zenml"
-version = "0.74.0"
+version = "0.84.2"
 description = "ZenML: Write production-ready ML code."
 optional = false
 python-versions = "<3.13,>=3.9"
