@@ -1,0 +1,129 @@
+# LLM Engineer's Handbook - 專案總覽
+
+## 專案目的 (Project Purpose)
+這是《LLM Engineer's Handbook》一書的官方實作專案，由Paul Iusztin和Maxime Labonne共同開發。專案目標是建立一個端到端的LLM系統，實現完整的生產就緒的大語言模型應用，包含數據收集、模型訓練、RAG系統實作和AWS雲端部署。
+
+## 核心功能 (Core Features)
+1. **數據收集與生成** - 自動化爬取Medium、LinkedIn、Substack等平台的內容
+2. **LLM訓練管道** - 完整的模型微調流程，包括SFT和DPO訓練
+3. **RAG檢索系統** - 基於向量資料庫的檢索增強生成系統
+4. **生產環境部署** - 使用AWS SageMaker的完整雲端部署方案
+5. **監控與評估** - 整合Comet ML和Opik的完整監控框架
+6. **測試與評估** - 全面的測試和模型評估框架
+
+## 技術架構 (Technical Architecture)
+
+### 主要技術棧:
+- **程式語言**: Python 3.11
+- **框架**: FastAPI (API服務), ZenML (ML管道編排)
+- **ML/DL**: PyTorch, Transformers, Sentence-Transformers
+- **資料庫**: MongoDB (文檔資料庫), Qdrant (向量資料庫)
+- **雲端服務**: AWS SageMaker, ECR, S3
+- **監控**: Comet ML (實驗追踪), Opik (提示監控)
+- **容器化**: Docker
+- **依賴管理**: Poetry
+- **CI/CD**: GitHub Actions
+
+### 專案結構:
+```
+llm_engineering/          # 核心Python套件 (DDD架構)
+├── domain/              # 核心業務實體
+├── application/         # 業務邏輯、爬蟲、RAG實作
+├── model/              # LLM訓練和推理
+└── infrastructure/     # 外部服務整合 (AWS, Qdrant, MongoDB)
+
+pipelines/               # ZenML ML管道定義
+steps/                  # 可重用的管道組件
+configs/                # 管道配置檔案
+tools/                  # 工具腳本
+tests/                  # 測試範例
+```
+
+## 使用方法 (Usage Methods)
+
+### 本地開發環境:
+1. 使用Docker Compose啟動本地基礎設施 (MongoDB, Qdrant)
+2. 透過Poetry管理Python依賴
+3. 使用Poe the Poet執行各種管道命令
+
+### 主要工作流程:
+1. **數據收集**: `poetry poe run-digital-data-etl`
+2. **特徵工程**: `poetry poe run-feature-engineering-pipeline`
+3. **生成訓練數據集**: `poetry poe run-generate-instruct-datasets-pipeline`
+4. **模型訓練**: `poetry poe run-training-pipeline`
+5. **模型評估**: `poetry poe run-evaluation-pipeline`
+6. **部署推理服務**: `poetry poe deploy-inference-endpoint`
+
+## 主要工具 (Key Tools)
+
+### 開發工具:
+- **Poetry**: 依賴管理和虛擬環境
+- **Poe the Poet**: 任務執行器
+- **Ruff**: 程式碼檢查和格式化
+- **Pre-commit**: 程式碼品質檢查
+
+### ML/AI工具:
+- **ZenML**: ML管道編排和工件管理
+- **HuggingFace**: 模型註冊和分享
+- **Sentence-Transformers**: 文本嵌入
+- **LangChain**: LLM應用開發框架
+
+### 基礎設施工具:
+- **AWS CLI**: AWS服務管理
+- **Docker**: 容器化
+- **MongoDB**: 文檔資料庫
+- **Qdrant**: 向量資料庫
+
+## 數據處理流程 (Data Processing Pipeline)
+
+1. **數據爬取**: 從Medium、LinkedIn、Substack等平台爬取Paul Iusztin和Maxime Labonne的文章
+2. **數據清理**: 使用BeautifulSoup和html2text進行內容清理
+3. **特徵提取**: 生成文本嵌入向量
+4. **數據集生成**: 創建指令調優和偏好對齊數據集
+5. **向量化存儲**: 將數據存儲到Qdrant向量資料庫
+
+## 模型訓練方法 (Model Training Methods)
+
+### 訓練策略:
+1. **SFT (Supervised Fine-Tuning)**: 監督式微調基礎模型
+2. **DPO (Direct Preference Optimization)**: 直接偏好優化
+3. **評估框架**: 使用自動化評估指標
+
+### 模型配置:
+- 基礎模型: Llama 3.1 8B
+- 最終模型: TwinLlama-3.1-8B-DPO (可在HuggingFace下載)
+- 訓練環境: AWS SageMaker
+
+## 未來改進 (Future Improvements)
+
+### 技術改進:
+1. **擴展數據源**: 支援更多平台的數據爬取
+2. **模型優化**: 實作量化和蒸餾技術以提升推理效率
+3. **多模態支援**: 整合圖像和視訊內容處理
+4. **即時學習**: 實作線上學習和模型更新機制
+
+### 架構改進:
+1. **微服務化**: 將單體應用拆分為微服務架構
+2. **自動擴縮**: 實作自動化的資源擴縮機制
+3. **多雲支援**: 支援多雲端平台部署
+4. **邊緣計算**: 支援邊緣設備部署
+
+### 功能改進:
+1. **高級RAG**: 實作Graph RAG和多步驟推理
+2. **個性化**: 基於用戶偏好的個性化回應
+3. **多語言支援**: 擴展至多語言內容處理
+4. **安全性增強**: 加強內容過濾和安全檢查
+
+## 成本考量 (Cost Considerations)
+- 大部分服務使用免費層級
+- 主要成本來自AWS SageMaker和OpenAI API
+- 完整運行一次約需$25美金
+- 可透過配置調整來控制成本
+
+## 學習資源 (Learning Resources)
+- 官方書籍: 《LLM Engineer's Handbook》
+- GitHub Issues: 技術問題討論和解決方案
+- HuggingFace模型: mlabonne/TwinLlama-3.1-8B-DPO
+- 文檔和教程: 詳細的設置和部署指南
+
+這個專案代表了現代LLM工程的最佳實踐，提供了從數據收集到生產部署的完整解決方案，是學習和實作企業級LLM系統的絕佳範例。
