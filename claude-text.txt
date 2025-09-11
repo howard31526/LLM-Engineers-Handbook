@@ -1,0 +1,1 @@
+echo "Testing Claude Code integration"
